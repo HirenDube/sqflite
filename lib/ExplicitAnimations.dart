@@ -24,19 +24,13 @@ class _LowLvlAnimationState extends State<LowLvlAnimation>
     controllAnime =
         AnimationController(duration: Duration(seconds: 3), vsync: this);
     curvedAnime =
-        CurvedAnimation(parent: controllAnime!, curve: Curves.easeInOutCirc)
-          ..addListener(() {
-            setState(() {});
-          })
-          ..addStatusListener((status) {
-            if (startAnimating && controllAnime!.isCompleted) {
-              controllAnime!.reverse();
-            } else if (startAnimating && controllAnime!.isDismissed) {
-              controllAnime!.forward();
-            }
-          });
+            CurvedAnimation(parent: controllAnime!, curve: Curves.easeInOutCirc)
+              ..addListener(() {
+                setState(() {});
+              })
+        ;
     size = Tween<double>(begin: 200, end: 400).animate(curvedAnime!);
-    color = ColorTween(begin: Colors.transparent, end: Colors.deepPurpleAccent)
+    color = ColorTween(begin: Colors.amberAccent, end: Colors.deepPurpleAccent)
         .animate(curvedAnime!);
 
     super.initState();
@@ -67,7 +61,9 @@ class _LowLvlAnimationState extends State<LowLvlAnimation>
                   onPressed: () {
                     setState(() {
                       startAnimating = !startAnimating;
-                      controllAnime?.forward();
+                      startAnimating
+                          ? controllAnime?.repeat(reverse: true)
+                          : controllAnime!.stop();
                     });
                   },
                   child: Text(startAnimating ? "Pause" : "Play")),
