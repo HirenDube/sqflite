@@ -16,15 +16,18 @@ class _AnimatedWidgetPracticeState extends State<AnimatedWidgetPractice>
   AnimationController? sizeControl;
   Animation<double>? inputSize;
   Animation<Color?>? inputColor;
+  CurvedAnimation? curvy;
+
 
   @override
   void initState() {
     // TODO: implement initState
     sizeControl =
         AnimationController(vsync: this, duration: Duration(seconds: 3));
-    inputSize = Tween<double>(begin: 15, end: 150).animate(sizeControl!);
+    curvy =CurvedAnimation(parent: sizeControl!, curve: Curves.elasticInOut);
+    inputSize = Tween<double>(begin: 15, end: 150).animate(curvy!);
     inputColor = ColorTween(begin: Colors.red, end: Colors.lightBlue)
-        .animate(sizeControl!);
+        .animate(curvy!);
     super.initState();
   }
 
@@ -36,7 +39,7 @@ class _AnimatedWidgetPracticeState extends State<AnimatedWidgetPractice>
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          animatedWidget(animateSize: inputSize, animateColor: inputColor),
+          _AnimatedWidget(animateSize: inputSize, animateColor: inputColor),
           ElevatedButton(onPressed: (){
             start = !start;
             start ?
@@ -51,13 +54,13 @@ class _AnimatedWidgetPracticeState extends State<AnimatedWidgetPractice>
   }
 }
 
-class animatedWidget extends AnimatedWidget {
+class _AnimatedWidget extends AnimatedWidget {
   Animation<double>? animateSize;
   Animation<Color?>? animateColor;
 
   String displayTxt = "Jai Shree Krishna";
 
-  animatedWidget({this.animateSize, this.animateColor})
+  _AnimatedWidget({this.animateSize, this.animateColor})
       : super(
           listenable: animateSize!,
         );
