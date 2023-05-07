@@ -1,3 +1,4 @@
+import "package:crud_pract_2nd_app/VideoPlayer.dart";
 import "package:flutter/material.dart";
 
 import "Animated Widget.dart";
@@ -7,7 +8,7 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: AnimatedWidgetPractice(),
+    home: FVideoPlayer(),
     theme: darkMode,
   ));
 }
