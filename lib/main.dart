@@ -3,12 +3,12 @@ import "package:flutter/material.dart";
 import "Wallpaper App.dart";
 
 void main() {
-  ThemeData darkMode = ThemeData();
 
   runApp(MaterialApp(
+
     debugShowCheckedModeBanner: false,
-    home: MyWallpaperApp(),
-    theme: darkMode,
+    home: MyWallpaperApp(
+    ),
   ));
 }
 

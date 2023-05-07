@@ -1,3 +1,4 @@
+import 'package:crud_pract_2nd_app/main.dart';
 import 'package:flutter/material.dart';
 
 class HeroAnimations extends StatefulWidget {
@@ -44,9 +45,11 @@ class _HeroAnimationsState extends State<HeroAnimations> {
     // super.initState();
 
 
-    pages = List.generate(10, (e) => showDialog(context: context, builder: (context)=>Dialog(child: Center(
-           child: Hero(tag: "ProfilePic[${ind}]", child: Image.network(imbgData[e])),
-         ), )));
+    pages = List.generate(10, (e) => Scaffold(appBar:buildAppBar(title: "Image", bgColor: Colors.transparent),body: SafeArea(
+      child: Center(
+        child: Hero(tag: "ProfilePic[${ind}]", child: Image.network(imbgData[e])),
+      ),
+    ),));
 
     // pages = imbgData.map((e) => showDialog(context: context, builder: (context)=>Dialog(child: Center(
     //   child: Hero(tag: "ProfilePic[${ind}]", child: Image.network(e)),
