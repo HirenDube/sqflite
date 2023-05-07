@@ -1,14 +1,13 @@
-import "package:crud_pract_2nd_app/VideoPlayer.dart";
 import "package:flutter/material.dart";
 
-import "Animated Widget.dart";
+import "Wallpaper App.dart";
 
 void main() {
   ThemeData darkMode = ThemeData();
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: FVideoPlayer(),
+    home: MyWallpaperApp(),
     theme: darkMode,
   ));
 }

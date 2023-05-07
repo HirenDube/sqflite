@@ -1,24 +1,67 @@
-
 import 'package:crud_pract_2nd_app/main.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
-class FVideoPlayer extends StatefulWidget {
-  const FVideoPlayer({Key? key}) : super(key: key);
+/// Stateful widget to fetch and then display video content.
+class VideoApp extends StatefulWidget {
+
+  String url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+   VideoApp({super.key});
 
   @override
-  State<FVideoPlayer> createState() => _FVideoPlayerState();
+  _VideoAppState createState() => _VideoAppState();
 }
 
-class _FVideoPlayerState extends State<FVideoPlayer> {
+class _VideoAppState extends State<VideoApp> {
+  late VideoPlayerController _controller;
 
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.url)
+      ..addListener(() {
+        setState(() {});
+      })
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+       _controller.play();
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(title: "Video Palyer in Flutter", bgColor: Colors.redAccent),
-      body: Container(
-        child: Text("//Video Player here"),
+    return MaterialApp(
+      title: 'Video Demo',
+      home: Scaffold(
+        appBar: buildAppBar(title: "VideoPlayer", bgColor: Colors.amber),
+        body: Center(
+          child: _controller.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
+                )
+              : Container(child: Text("There's a problem loading the video"),),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              _controller.value.isPlaying
+                  ? _controller.pause()
+                  : _controller.play();
+            });
+          },
+          child: Icon(
+            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+            color: Colors.redAccent,
+          ),
+        ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 }

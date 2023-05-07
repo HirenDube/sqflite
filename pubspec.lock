@@ -120,6 +120,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_fonts:
+    dependency: "direct dev"
+    description:
+      name: google_fonts
+      sha256: "6b6f10f0ce3c42f6552d1c70d2c28d764cf22bb487f50f66cca31dcd5194f4d6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.4"
   html:
     dependency: transitive
     description:
@@ -129,7 +137,7 @@ packages:
     source: hosted
     version: "0.15.3"
   http:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: http
       sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
@@ -477,6 +485,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.16"
+  wallpaper_manager:
+    dependency: "direct dev"
+    description:
+      name: wallpaper_manager
+      sha256: "26cf63054bed282715a03d15292393069e56b97f5e87021e2a0de8dbbfa8b7d7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.10"
   win32:
     dependency: transitive
     description:
