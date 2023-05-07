@@ -101,21 +101,6 @@ class _MyWallpaperAppState extends State<MyWallpaperApp> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>
                                   SetWallpaper(imageUrl: "${imageData[index]["src"]["large2x"]}",tag: "wallpaper[$index]")
-                                  // Scaffold(
-                                  //   appBar: buildAppBar(
-                                  //       title: "${imagData[index]["url"]}",
-                                  //       bgColor: Colors.deepPurple),
-                                  //   body: Center(
-                                  //     child: Hero(
-                                  //       tag: "wallpaper[$index]",
-                                  //       child: Expanded(
-                                  //         child: Image.network(
-                                  //           imagData[index]["src"]["large2x"],
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // )
 
                           ));
                         },
