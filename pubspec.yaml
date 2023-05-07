@@ -43,6 +43,7 @@ dev_dependencies:
   video_player:
   http:
   google_fonts:
+  gallery_saver:
 
 #  flutter_cache_manager:
 

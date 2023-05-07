@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:crud_pract_2nd_app/Set%20Wallpaper.dart';
 import 'package:crud_pract_2nd_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as https;
+
 
 class MyWallpaperApp extends StatefulWidget {
   const MyWallpaperApp({Key? key}) : super(key: key);
@@ -12,9 +14,10 @@ class MyWallpaperApp extends StatefulWidget {
 }
 
 class _MyWallpaperAppState extends State<MyWallpaperApp> {
-  List imagData = [];
-
+  List imageData = [];
   int page = 1;
+
+  String searchQuery = "nature";
 
   void initState() {
     fetchPixelsApiData();
@@ -24,7 +27,7 @@ class _MyWallpaperAppState extends State<MyWallpaperApp> {
   fetchPixelsApiData() async {
     await https.get(
         Uri.parse(
-          "https://api.pexels.com/v1/curated?per_page=40",
+          "https://api.pexels.com/v1/search?query=${searchQuery}&per_page=80&orientation=portrait",
         ),
         headers: {
           "Authorization":
@@ -32,7 +35,7 @@ class _MyWallpaperAppState extends State<MyWallpaperApp> {
         }).then((value) {
       Map apiData = jsonDecode(value.body);
       setState(() {
-        imagData = apiData["photos"];
+        imageData = apiData["photos"];
       });
     });
   }
@@ -44,7 +47,7 @@ class _MyWallpaperAppState extends State<MyWallpaperApp> {
     });
     await https.get(
         Uri.parse(
-          "https://api.pexels.com/v1/curated?per_page=80&page=$page",
+          "https://api.pexels.com/v1/search?query=$searchQuery&per_page=80&orientation=portrait&page=$page",
         ),
         headers: {
           "Authorization":
@@ -52,23 +55,41 @@ class _MyWallpaperAppState extends State<MyWallpaperApp> {
         }).then((value) {
       Map apiData = jsonDecode(value.body);
       setState(() {
-        imagData.addAll(apiData["photos"]);
+        imageData.addAll(apiData["photos"]);
       });
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.black,
       appBar:
-          buildAppBar(title: "My Wallpaper App", bgColor: Colors.deepPurple),
+          buildAppBar(title: "My Wallpaper App", bgColor: Colors.deepPurpleAccent),
       body: Column(
         children: [
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onSubmitted: (value){
+                setState(() {
+                  searchQuery = value;
+                  fetchPixelsApiData();
+                });
+              },
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                filled: true,
+                labelText: "Enter search Query : "
+              ),
+            ),
+          ),
           Expanded(
             child: Container(
-              color: Colors.black,
               child: GridView.builder(
-                  itemCount: imagData.length,
+                  itemCount: imageData.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 3,
@@ -78,28 +99,33 @@ class _MyWallpaperAppState extends State<MyWallpaperApp> {
                   itemBuilder: (context, index) => InkWell(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Scaffold(
-                                appBar: buildAppBar(
-                                    title: "${imagData[index]["url"]}",
-                                    bgColor: Colors.deepPurple),
-                                body: Center(
-                                  child: Hero(
-                                    tag: "wallpaper[$index]",
-                                    child: Expanded(
-                                      child: Image.network(imagData[index]
-                                          ["src"]["large2x"]),
-                                    ),
-                                  ),
-                                ),
-                              )));
+                              builder: (context) =>
+                                  SetWallpaper(imageUrl: "${imageData[index]["src"]["large2x"]}",tag: "wallpaper[$index]")
+                                  // Scaffold(
+                                  //   appBar: buildAppBar(
+                                  //       title: "${imagData[index]["url"]}",
+                                  //       bgColor: Colors.deepPurple),
+                                  //   body: Center(
+                                  //     child: Hero(
+                                  //       tag: "wallpaper[$index]",
+                                  //       child: Expanded(
+                                  //         child: Image.network(
+                                  //           imagData[index]["src"]["large2x"],
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // )
+
+                          ));
                         },
                         child: Container(
-                          color: Colors.amber,
+                          color: Colors.grey,
                           child: Hero(
                             transitionOnUserGestures: true,
                             tag: "wallpaper[$index]",
                             child: Image.network(
-                              "${imagData[index]["src"]["tiny"]}",
+                              "${imageData[index]["src"]["tiny"]}",
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -107,19 +133,25 @@ class _MyWallpaperAppState extends State<MyWallpaperApp> {
                       )),
             ),
           ),
-          ListTile(
-            tileColor: Colors.grey,
-            title: TextButton(
-              onPressed: loadMoreData,
-              child: Text(
-                "Load More Wallapapers",
-                style: GoogleFonts.julee(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
+          GestureDetector(
+            onTap: loadMoreData,
+            child: Opacity(
+              opacity: 0.5,
+              child: Container(
+                color: Colors.black,
+                alignment: Alignment.center,
+                height: 60,
+                child: Text(
+                  "Load More Wallapapers",
+                  style: GoogleFonts.julee(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
-          )
+          ),
+
         ],
       ),
     );

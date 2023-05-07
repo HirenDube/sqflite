@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.crud_pract_2nd_app">
    <application
-        android:label="crud_pract_2nd_app"
+        android:label="My Custom Wallpapers"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
