@@ -47,9 +47,9 @@ class _LottyState extends State<Lotty> with SingleTickerProviderStateMixin {
             children: [
               IconButton(
                   onPressed: () {
-                    lottyController!.forward();
+                    lottyController!.reverse();
                   },
-                  icon: Icon(Icons.skip_next)),
+                  icon: Icon(Icons.skip_previous)),
               IconButton(
                   onPressed: () {
                     setState(() {
@@ -62,9 +62,9 @@ class _LottyState extends State<Lotty> with SingleTickerProviderStateMixin {
                   icon: Icon(paused ? Icons.play_arrow : Icons.pause)),
               IconButton(
                   onPressed: () {
-                    lottyController!.reverse();
+                    lottyController!.forward();
                   },
-                  icon: Icon(Icons.skip_previous)),
+                  icon: Icon(Icons.skip_next)),
             ],
           ),
         ],
