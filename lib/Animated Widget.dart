@@ -19,6 +19,8 @@ class _AnimatedWidgetPracticeState extends State<AnimatedWidgetPractice>
   CurvedAnimation? curvy;
 
 
+
+
   @override
   void initState() {
     // TODO: implement initState
