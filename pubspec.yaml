@@ -36,7 +36,9 @@ dependencies:
   gallery_saver:
   google_fonts:
   video_player:
-  extended_image: 
+  extended_image:
+  screenshot:
+  path_provider:
 
 
   # The following adds the Cupertino Icons font to your application.
