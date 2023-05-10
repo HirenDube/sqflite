@@ -9,39 +9,45 @@ class BasicImageEditor extends StatefulWidget {
   State<BasicImageEditor> createState() => _BasicImageEditorState();
 }
 
-class _BasicImageEditorState extends State<BasicImageEditor> {
-  GlobalKey<ExtendedImageEditorState> _editorKey =
-      GlobalKey<ExtendedImageEditorState>();
+class _BasicImageEditorState extends State<BasicImageEditor> with SingleTickerProviderStateMixin{
+  var _editorKey =
+  GlobalKey<ExtendedImageEditorState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
-          buildAppBar(title: "Basic Image Editor App", bgColor: Colors.amber),
+      buildAppBar(title: "Basic Image Editor App", bgColor: Colors.amber),
       body: ExtendedImage.network(
         "https://static1.srcdn.com/wordpress/wp-content/uploads/2022/01/Boruto-Orochimaru.jpg",
         mode: ExtendedImageMode.editor,
-        key: _editorKey,
+        extendedImageEditorKey: _editorKey,
         fit: BoxFit.contain,
-        initEditorConfigHandler: (state) => EditorConfig(
-            maxScale: 10.0,
-            hitTestSize: 30.0,
-            cropRectPadding: EdgeInsets.all(10.0),
-            lineColor: Colors.red,
-            cornerColor: Colors.amber),
+        initEditorConfigHandler: (state) =>
+            EditorConfig(
+                maxScale: 10.0,
+                hitTestSize: 30.0,
+                cropRectPadding: EdgeInsets.all(10.0),
+                lineColor: Colors.red,
+                cornerColor: Colors.amber),
       ),
-      bottomNavigationBar: Material(
+      bottomNavigationBar: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
         child: ButtonBar(
-          alignment: MainAxisAlignment.center,
+          // alignment: MainAxisAlignment.center,
           children: [
             IconButton(
-                onPressed: () => _editorKey.currentState!.rotate(right: false),
+                onPressed: () {
+                  if( _editorKey.currentState != null){
+                    _editorKey.currentState?.rotate(right: false);
+                  }
+                },
                 icon: Icon(Icons.rotate_left)),
             IconButton(
-                onPressed: () => _editorKey.currentState!.reset(),
+                onPressed: () => _editorKey.currentState?.reset(),
                 icon: Icon(Icons.restore)),
             IconButton(
-                onPressed: () => _editorKey.currentState!.rotate(right: true),
+                onPressed: () => _editorKey.currentState?.rotate(right: true),
                 icon: Icon(Icons.rotate_right)),
           ],
         ),
