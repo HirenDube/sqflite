@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:screenshot/screenshot.dart';
 
 class BasicImageEditor extends StatefulWidget {
   const BasicImageEditor({Key? key}) : super(key: key);
@@ -21,7 +22,9 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
   //     "https://m.media-amazon.com/images/M/MV5BM2JjYmUyN2MtODIyOC00ZmNiLWI5YTUtN2NiMWQzNmM3OGU1XkEyXkFqcGdeQXVyNDk3NDEzMzk@._V1_FMjpg_UX1000_.jpg";
 
   String url =
-      "https://static1.srcdn.com/wordpress/wp-content/uploads/2022/01/Boruto-Orochimaru.jpg";
+      "https://bleedingcool.com/wp-content/uploads/2021/04/45700086afb36912d1de9db2aaf61108-1200x900.jpg";
+
+  ScreenshotController ssController = ScreenshotController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,26 +35,30 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
           actions: [
             IconButton(
                 onPressed: () async {
-                  if (_editorKey.currentState!.rawImageData != null) {
-                    var iamge = _editorKey.currentState!.rawImageData;
-                    saveImage(iamge);
-                    saveImage12(iamge);
-                  }
+                  ssController.capture().then((imageBytes) {
+                    if (imageBytes != null) {
+                      saveImage(imageBytes);
+                      saveImage12(imageBytes);
+                    }
+                  });
                 },
                 icon: Icon(Icons.save_alt))
           ]),
-      body: ExtendedImage.network(
-        url,
-        mode: ExtendedImageMode.editor,
-        cacheRawData: true,
-        extendedImageEditorKey: _editorKey,
-        fit: BoxFit.contain,
-        initEditorConfigHandler: (state) => EditorConfig(
-            maxScale: 10.0,
-            hitTestSize: 30.0,
-            cropRectPadding: EdgeInsets.all(10.0),
-            lineColor: Colors.red,
-            cornerColor: Colors.amber),
+      body: Screenshot(
+        controller: ssController,
+        child: ExtendedImage.network(
+          url,
+          mode: ExtendedImageMode.editor,
+          cacheRawData: true,
+          extendedImageEditorKey: _editorKey,
+          fit: BoxFit.contain,
+          initEditorConfigHandler: (state) => EditorConfig(
+              maxScale: 10.0,
+              hitTestSize: 30.0,
+              cropRectPadding: EdgeInsets.all(10.0),
+              lineColor: Colors.red,
+              cornerColor: Colors.amber),
+        ),
       ),
       bottomNavigationBar: Material(
         child: ButtonBar(
@@ -107,5 +114,4 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
     print(
         'Image saved : ${"${directory.path}/${DateTime.now().toString().replaceAll(' ', '_').replaceAll('.', '_').replaceAll(':', '_')}.jpg"}');
   }
-
 }

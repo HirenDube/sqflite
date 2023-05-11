@@ -10,7 +10,7 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: VideoPlayer2(),
+    home: BasicImageEditor(),
     theme: darkMode,
   ));
 }
