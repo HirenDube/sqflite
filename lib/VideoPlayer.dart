@@ -2,66 +2,47 @@ import 'package:crud_pract_2nd_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-/// Stateful widget to fetch and then display video content.
-class VideoApp extends StatefulWidget {
-
-  String url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
-   VideoApp({super.key});
+class VideoPlayer2 extends StatefulWidget {
+  const VideoPlayer2({Key? key}) : super(key: key);
 
   @override
-  _VideoAppState createState() => _VideoAppState();
+  State<VideoPlayer2> createState() => _VideoPlayer2State();
 }
 
-class _VideoAppState extends State<VideoApp> {
-  late VideoPlayerController _controller;
+class _VideoPlayer2State extends State<VideoPlayer2> {
+  VideoPlayerController? controller;
 
   @override
   void initState() {
-    super.initState();
-    _controller = VideoPlayerController.network(widget.url)
-      ..addListener(() {
+    // TODO: implement initState
+    controller = VideoPlayerController.network(
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+      ..initialize().then((value) {
         setState(() {});
       })
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-       _controller.play();
-      });
+      ..setLooping(true);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Video Demo',
-      home: Scaffold(
-        appBar: buildAppBar(title: "VideoPlayer", bgColor: Colors.amber),
-        body: Center(
-          child: _controller.value.isInitialized
-              ? AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                )
-              : Container(child: Text("There's a problem loading the video"),),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              _controller.value.isPlaying
-                  ? _controller.pause()
-                  : _controller.play();
-            });
-          },
-          child: Icon(
-            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-            color: Colors.redAccent,
-          ),
-        ),
+    return Scaffold(
+      appBar: buildAppBar(title: "Video Player", bgColor: Colors.pink),
+      body: Column(
+        children: [
+          if(controller != null && controller!.value.isInitialized)
+            SizedBox(
+              height: 500,
+              width: 500,
+              child: AspectRatio(
+                aspectRatio: 16/9,
+                child: Expanded(child: VideoPlayer(controller!)),
+              ),
+            )
+          else
+            CircularProgressIndicator()
+        ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
   }
 }

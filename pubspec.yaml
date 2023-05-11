@@ -36,6 +36,9 @@ dependencies:
   extended_image:
   path_provider:
   image_gallery_saver:
+  screenshot:
+  gallery_saver:
+  video_player:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

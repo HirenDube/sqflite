@@ -1,4 +1,3 @@
- import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 class AddEntry extends StatefulWidget {
@@ -39,8 +38,6 @@ class _AddEntryState extends State<AddEntry> {
   }
 
 getBoolValue()async{
-  SharedPreferences pref1 = await SharedPreferences.getInstance();
-  appModeDark = pref1.getBool("appModeDark")!;
 }
 
   @override
@@ -71,10 +68,8 @@ getBoolValue()async{
                 }),
                 value: appModeDark,
                 onChanged: (change) async {
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
                   setState(() {
                     appModeDark = change;
-                    prefs.setBool("appModeDark", change);
                   });
                 })
           ],
