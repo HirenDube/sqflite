@@ -4,6 +4,8 @@ import "package:crud_pract_2nd_app/VideoPlayer.dart";
 import "package:flutter/material.dart";
 
 void main() {
+
+  String imgEditSaveLink = "https://github.com/Virendratrivedi123/ImageEditor.git";
   ThemeData darkMode = ThemeData();
 
   runApp(MaterialApp(
