@@ -38,6 +38,7 @@ dependencies:
   image_gallery_saver:
   screenshot:
   gallery_saver:
+  permission_handler:
   video_player:
 
   # The following adds the Cupertino Icons font to your application.

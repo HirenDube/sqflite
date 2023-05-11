@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:crud_pract_2nd_app/main.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class BasicImageEditor extends StatefulWidget {
   const BasicImageEditor({Key? key}) : super(key: key);
@@ -34,6 +35,7 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
                   if (_editorKey.currentState!.rawImageData != null) {
                     var iamge = _editorKey.currentState!.rawImageData;
                     saveImage(iamge);
+                    saveImage12(iamge);
                   }
                 },
                 icon: Icon(Icons.save_alt))
@@ -79,16 +81,16 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
 
   String andMenifPermi = 'android:requestLegacyExternalStorage="true"';
 
-  // Future<String> saveImage(Uint8List bytes) async {
-  //   await [Permission.storage].request();
-  //   final time = DateTime.now()
-  //       .toIso8601String()
-  //       .replaceAll('.', '_')
-  //       .replaceAll(':', '_');
-  //   final name = 'Screenshot_$time';
-  //   final result = await ImageGallerySaver.saveImage(bytes, name: name);
-  //   return result['filePath'];
-  // }
+  Future saveImage12(Uint8List bytes) async {
+    await [Permission.storage].request();
+    final time = DateTime.now()
+        .toIso8601String()
+        .replaceAll('.', '_')
+        .replaceAll(':', '_');
+    final name = 'Screenshot_$time';
+    final result = await ImageGallerySaver.saveImage(bytes, name: name);
+    // return result['filePath'];
+  }
 
   void saveImage(Uint8List imageData) async {
     final directory = await getApplicationDocumentsDirectory();
@@ -105,4 +107,5 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
     print(
         'Image saved : ${"${directory.path}/${DateTime.now().toString().replaceAll(' ', '_').replaceAll('.', '_').replaceAll(':', '_')}.jpg"}');
   }
+
 }

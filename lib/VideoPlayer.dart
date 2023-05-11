@@ -10,17 +10,22 @@ class VideoPlayer2 extends StatefulWidget {
 }
 
 class _VideoPlayer2State extends State<VideoPlayer2> {
+  String url = "https://www.w3schools.com/html/mov_bbb.mp4 ";
   VideoPlayerController? controller;
 
   @override
   void initState() {
     // TODO: implement initState
-    controller = VideoPlayerController.network(
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+    controller = VideoPlayerController.network(url)
       ..initialize().then((value) {
-        setState(() {});
+        setState(() {
+          controller!.play();
+        });
       })
-      ..setLooping(true);
+      ..setLooping(true)
+      ..addListener(() {
+        setState(() {});
+      });
     super.initState();
   }
 
@@ -30,17 +35,39 @@ class _VideoPlayer2State extends State<VideoPlayer2> {
       appBar: buildAppBar(title: "Video Player", bgColor: Colors.pink),
       body: Column(
         children: [
-          if(controller != null && controller!.value.isInitialized)
-            SizedBox(
-              height: 500,
-              width: 500,
-              child: AspectRatio(
-                aspectRatio: 16/9,
-                child: Expanded(child: VideoPlayer(controller!)),
-              ),
+          if (controller != null && controller!.value.isInitialized)
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: VideoPlayer(controller!),
             )
           else
-            CircularProgressIndicator()
+            CircularProgressIndicator(),
+          Text("${controller!.value.position} / ${controller!.value.duration}"),
+          VideoProgressIndicator(controller!,
+              allowScrubbing: true,
+              padding: EdgeInsets.all(10),
+              colors: VideoProgressColors(
+                playedColor: Colors.greenAccent,
+              )),
+          ButtonBar(
+            alignment: MainAxisAlignment.spaceEvenly,
+            children: [
+
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    controller!.value.isPlaying
+                        ? controller!.pause()
+                        : controller!.play();
+                  });
+                },
+                icon: Icon(controller!.value.isPlaying
+                    ? Icons.pause
+                    : Icons.play_arrow),
+              ),
+
+            ],
+          )
         ],
       ),
     );
