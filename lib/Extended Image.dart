@@ -6,8 +6,6 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:screenshot/screenshot.dart';
 
 class BasicImageEditor extends StatefulWidget {
   const BasicImageEditor({Key? key}) : super(key: key);
@@ -17,8 +15,6 @@ class BasicImageEditor extends StatefulWidget {
 }
 
 class _BasicImageEditorState extends State<BasicImageEditor> {
-  var ssController = ScreenshotController();
-  Uint8List? imageBytes;
 
   var _editorKey = GlobalKey<ExtendedImageEditorState>();
   // String url =
@@ -31,9 +27,8 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
     return Scaffold(
       appBar:
           buildAppBar(title: "Basic Image Editor App", bgColor: Colors.amber),
-      body: Screenshot(
-        controller: ssController,
-        child: ExtendedImage.network(
+      body:
+        ExtendedImage.network(
           url,
           mode: ExtendedImageMode.editor,
           extendedImageEditorKey: _editorKey,
@@ -46,7 +41,6 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
               lineColor: Colors.red,
               cornerColor: Colors.amber),
         ),
-      ),
       bottomNavigationBar: Material(
         child: ButtonBar(
           alignment: MainAxisAlignment.spaceEvenly,
@@ -67,7 +61,9 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
             IconButton(
                 onPressed: () async {
                      var iamge =  _editorKey.currentState!.rawImageData;
-                     Future<Directory> location = getApplicationDocumentsDirectory();
+                     if(iamge != null){
+                       saveImage(iamge);
+                     }
 
 
                 },
@@ -80,14 +76,24 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
 
   String andMenifPermi = 'android:requestLegacyExternalStorage="true"';
 
-  Future<String> saveImage(Uint8List bytes) async {
-    await [Permission.storage].request();
-    final time = DateTime.now()
-        .toIso8601String()
-        .replaceAll('.', '_')
-        .replaceAll(':', '_');
-    final name = 'Screenshot_$time';
-    final result = await ImageGallerySaver.saveImage(bytes, name: name);
-    return result['filePath'];
+  // Future<String> saveImage(Uint8List bytes) async {
+  //   await [Permission.storage].request();
+  //   final time = DateTime.now()
+  //       .toIso8601String()
+  //       .replaceAll('.', '_')
+  //       .replaceAll(':', '_');
+  //   final name = 'Screenshot_$time';
+  //   final result = await ImageGallerySaver.saveImage(bytes, name: name);
+  //   return result['filePath'];
+  // }
+
+  void saveImage(Uint8List imageData) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path + '/image.png';
+
+    await File(path).writeAsBytes(imageData);
+
+    print('Image saved to $path');
   }
+
 }
