@@ -18,11 +18,11 @@ class BasicImageEditor extends StatefulWidget {
 class _BasicImageEditorState extends State<BasicImageEditor> {
   var _editorKey = GlobalKey<ExtendedImageEditorState>();
 
-  // String url =
-  //     "https://m.media-amazon.com/images/M/MV5BM2JjYmUyN2MtODIyOC00ZmNiLWI5YTUtN2NiMWQzNmM3OGU1XkEyXkFqcGdeQXVyNDk3NDEzMzk@._V1_FMjpg_UX1000_.jpg";
-
   String url =
-      "https://bleedingcool.com/wp-content/uploads/2021/04/45700086afb36912d1de9db2aaf61108-1200x900.jpg";
+      "https://m.media-amazon.com/images/M/MV5BM2JjYmUyN2MtODIyOC00ZmNiLWI5YTUtN2NiMWQzNmM3OGU1XkEyXkFqcGdeQXVyNDk3NDEzMzk@._V1_FMjpg_UX1000_.jpg";
+
+  // String url =
+  //     "https://bleedingcool.com/wp-content/uploads/2021/04/45700086afb36912d1de9db2aaf61108-1200x900.jpg";
 
   ScreenshotController ssController = ScreenshotController();
 
@@ -31,16 +31,24 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
     return Scaffold(
       appBar: buildAppBar(
           title: "Basic Image Editor App",
-          bgColor: Colors.amber,
+          bgColor: Colors.teal,
           actions: [
             IconButton(
                 onPressed: () async {
-                  ssController.capture().then((imageBytes) {
-                    if (imageBytes != null) {
-                      saveImage(imageBytes);
-                      saveImage12(imageBytes);
-                    }
-                  });
+                  // screenshot of the widget
+                  ssController
+                    ..captureAsUiImage(pixelRatio: 5)
+                    ..capture().then((imageBytes) {
+                      if (imageBytes != null) {
+                        saveImage12(imageBytes);
+                      }
+                    });
+
+                  // original Image
+                  // if (_editorKey.currentState!.rawImageData != null) {
+                  //   saveImage12(_editorKey.currentState!.rawImageData);
+                  // }
+
                 },
                 icon: Icon(Icons.save_alt))
           ]),
@@ -48,11 +56,18 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
         controller: ssController,
         child: ExtendedImage.network(
           url,
+          alignment: Alignment.centerLeft,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          colorBlendMode: BlendMode.saturation,
+          gaplessPlayback: true,
+          enableLoadState: true,
+          scale: double.maxFinite,
           mode: ExtendedImageMode.editor,
           cacheRawData: true,
           extendedImageEditorKey: _editorKey,
           fit: BoxFit.contain,
           initEditorConfigHandler: (state) => EditorConfig(
+              hitTestBehavior: HitTestBehavior.deferToChild,
               maxScale: 10.0,
               hitTestSize: 30.0,
               cropRectPadding: EdgeInsets.all(10.0),
@@ -99,19 +114,19 @@ class _BasicImageEditorState extends State<BasicImageEditor> {
     // return result['filePath'];
   }
 
-  void saveImage(Uint8List imageData) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final file = await File("${directory.path}/" +
-            DateTime.now().toString().replaceAll(' ', '_') +
-            ".jpg")
-        .create();
-    file.writeAsBytesSync(imageData);
-
-    // final path = directory.path + '/image.png';
-    //
-    // await File(path).writeAsBytes(imageData);
-    //
-    print(
-        'Image saved : ${"${directory.path}/${DateTime.now().toString().replaceAll(' ', '_').replaceAll('.', '_').replaceAll(':', '_')}.jpg"}');
-  }
+// void saveImage(Uint8List imageData) async {
+//   final directory = await getApplicationDocumentsDirectory();
+//   final file = await File("${directory.path}/" +
+//           DateTime.now().toString().replaceAll(' ', '_') +
+//           ".jpg")
+//       .create();
+//   file.writeAsBytesSync(imageData);
+//
+//   // final path = directory.path + '/image.png';
+//   //
+//   // await File(path).writeAsBytes(imageData);
+//   //
+//   print(
+//       'Image saved : ${"${directory.path}/${DateTime.now().toString().replaceAll(' ', '_').replaceAll('.', '_').replaceAll(':', '_')}.jpg"}');
+// }
 }
