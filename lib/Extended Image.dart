@@ -1,12 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:crud_pract_2nd_app/main.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
-
 
 class BasicImageEditor extends StatefulWidget {
   const BasicImageEditor({Key? key}) : super(key: key);
@@ -15,34 +16,40 @@ class BasicImageEditor extends StatefulWidget {
   State<BasicImageEditor> createState() => _BasicImageEditorState();
 }
 
-class _BasicImageEditorState extends State<BasicImageEditor>
-    with SingleTickerProviderStateMixin {
-  var controller = ScreenshotController();
+class _BasicImageEditorState extends State<BasicImageEditor> {
+  var ssController = ScreenshotController();
   Uint8List? imageBytes;
 
   var _editorKey = GlobalKey<ExtendedImageEditorState>();
+  // String url =
+  //     "https://m.media-amazon.com/images/M/MV5BM2JjYmUyN2MtODIyOC00ZmNiLWI5YTUtN2NiMWQzNmM3OGU1XkEyXkFqcGdeQXVyNDk3NDEzMzk@._V1_FMjpg_UX1000_.jpg";
+
+  String url = "https://static1.srcdn.com/wordpress/wp-content/uploads/2022/01/Boruto-Orochimaru.jpg";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
           buildAppBar(title: "Basic Image Editor App", bgColor: Colors.amber),
-      body: ExtendedImage.network(
-        "https://static1.srcdn.com/wordpress/wp-content/uploads/2022/01/Boruto-Orochimaru.jpg",
-        mode: ExtendedImageMode.editor,
-        extendedImageEditorKey: _editorKey,
-        fit: BoxFit.contain,
-        initEditorConfigHandler: (state) => EditorConfig(
-            maxScale: 10.0,
-            hitTestSize: 30.0,
-            cropRectPadding: EdgeInsets.all(10.0),
-            lineColor: Colors.red,
-            cornerColor: Colors.amber),
+      body: Screenshot(
+        controller: ssController,
+        child: ExtendedImage.network(
+          url,
+          mode: ExtendedImageMode.editor,
+          extendedImageEditorKey: _editorKey,
+          fit: BoxFit.contain,
+          initEditorConfigHandler: (state) => EditorConfig(
+
+              maxScale: 10.0,
+              hitTestSize: 30.0,
+              cropRectPadding: EdgeInsets.all(10.0),
+              lineColor: Colors.red,
+              cornerColor: Colors.amber),
+        ),
       ),
-      bottomNavigationBar: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+      bottomNavigationBar: Material(
         child: ButtonBar(
-          // alignment: MainAxisAlignment.center,
+          alignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
                 onPressed: () {
@@ -58,32 +65,29 @@ class _BasicImageEditorState extends State<BasicImageEditor>
                 onPressed: () => _editorKey.currentState?.rotate(right: true),
                 icon: Icon(Icons.rotate_right)),
             IconButton(
-                onPressed: () {
-                  final bytes = controller.captureFromWidget(Material(
-                      child: ExtendedImage.network(
-                    "https://static1.srcdn.com/wordpress/wp-content/uploads/2022/01/Boruto-Orochimaru.jpg",
-                    mode: ExtendedImageMode.editor,
-                    extendedImageEditorKey: _editorKey,
-                    fit: BoxFit.contain,
-                    initEditorConfigHandler: (state) => EditorConfig(
-                        maxScale: 10.0,
-                        hitTestSize: 30.0,
-                        cropRectPadding: EdgeInsets.all(10.0),
-                        lineColor: Colors.red,
-                        cornerColor: Colors.amber),
-                  )));
-                  setState(() {
-                    this.imageBytes = bytes as Uint8List?;
-                  });
+                onPressed: () async {
+                     var iamge =  _editorKey.currentState!.rawImageData;
+                     Future<Directory> location = getApplicationDocumentsDirectory();
 
-                  final location = getApplicationDocumentsDirectory();
-                  final file = File("${location}/image.png");
-                  file.writeAsBytes(imageBytes!);
+
                 },
                 icon: Icon(Icons.save_alt))
           ],
         ),
       ),
     );
+  }
+
+  String andMenifPermi = 'android:requestLegacyExternalStorage="true"';
+
+  Future<String> saveImage(Uint8List bytes) async {
+    await [Permission.storage].request();
+    final time = DateTime.now()
+        .toIso8601String()
+        .replaceAll('.', '_')
+        .replaceAll(':', '_');
+    final name = 'Screenshot_$time';
+    final result = await ImageGallerySaver.saveImage(bytes, name: name);
+    return result['filePath'];
   }
 }

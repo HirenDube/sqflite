@@ -30,16 +30,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences:
   lottie:
   image_picker:
-  gallery_saver:
   google_fonts:
-  video_player:
   extended_image:
-  screenshot:
   path_provider:
-
+  image_gallery_saver:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
