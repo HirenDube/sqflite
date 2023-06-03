@@ -3,6 +3,8 @@ import "package:crud_pract_2nd_app/Image%20Picker.dart";
 import "package:crud_pract_2nd_app/VideoPlayer.dart";
 import "package:flutter/material.dart";
 
+import "SQFlite.dart";
+
 void main() {
 
   String imgEditSaveLink = "https://github.com/Virendratrivedi123/ImageEditor.git";
@@ -10,7 +12,7 @@ void main() {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: BasicImageEditor(),
+    home: SQFlite(),
     theme: darkMode,
   ));
 }

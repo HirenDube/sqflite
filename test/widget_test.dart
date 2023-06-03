@@ -28,3 +28,26 @@ void main() {
     expect(find.text('1'), findsOneWidget);
   });
 }
+
+
+
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar:AppBar(title: Text("MyApp"),backgroundColor: Colors.deepPurple,),
+      body: Center(
+        child: Text("MyApp",style: TextStyle(
+          fontSize: 40
+        ),),
+      ),
+    );
+  }
+}
