@@ -1,13 +1,10 @@
-import "package:crud_pract_2nd_app/Extended%20Image.dart";
-import "package:crud_pract_2nd_app/Image%20Picker.dart";
-import "package:crud_pract_2nd_app/VideoPlayer.dart";
 import "package:flutter/material.dart";
 
 import "SQFlite.dart";
 
 void main() {
 
-  String imgEditSaveLink = "https://github.com/Virendratrivedi123/ImageEditor.git";
+  // String imgEditSaveLink = "https://github.com/Virendratrivedi123/ImageEditor.git";
   ThemeData darkMode = ThemeData();
 
   runApp(MaterialApp(
